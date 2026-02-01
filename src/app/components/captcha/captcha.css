@@ -1,5 +1,4 @@
 .captcha-container {
-  /* min-height: 100vh; */
   padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
@@ -14,19 +13,19 @@
   justify-content: space-between;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .progress-bar {
   height: 8px;
-  background: #e0e0e0;
+  background: var(--border-color);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
   transition: width 0.3s ease;
 }
 
@@ -50,42 +49,42 @@
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: #e0e0e0;
-  color: #666;
+  background: var(--border-color);
+  color: var(--text-secondary);
 }
 
 .stage-dot.completed {
-  background: #4caf50;
+  background: var(--success-color);
   color: white;
 }
 
 .stage-dot.current {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
   transform: scale(1.1);
 }
 
 .stage-dot.pending {
-  background: #e0e0e0;
-  color: #999;
+  background: var(--border-color);
+  color: var(--text-muted);
 }
 
 .stage-line {
   width: 40px;
   height: 3px;
-  background: #e0e0e0;
+  background: var(--border-color);
   transition: background 0.3s ease;
 }
 
 .stage-line.completed {
-  background: #4caf50;
+  background: var(--success-color);
 }
 
 .challenge-card {
-  background: white;
+  background: var(--background-card);
   border-radius: 20px;
   padding: 2rem;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px var(--shadow-color);
 }
 
 .challenge-header {
@@ -96,8 +95,8 @@
 .challenge-type-badge {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background: #f0f4ff;
-  color: #667eea;
+  background: rgba(255, 107, 53, 0.15);
+  color: var(--primary-color);
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
@@ -105,39 +104,39 @@
 }
 
 .challenge-type-badge[data-type='image_selection'] {
-  background: #fff3e0;
-  color: #f57c00;
+  background: rgba(255, 107, 53, 0.15);
+  color: var(--primary-color);
 }
 
 .challenge-type-badge[data-type='math_question'] {
-  background: #e8f5e9;
-  color: #388e3c;
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--success-color);
 }
 
 .challenge-type-badge[data-type='text_input'] {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: rgba(33, 150, 243, 0.15);
+  color: #2196f3;
 }
 
 .challenge-type-badge[data-type='slider_puzzle'] {
-  background: #fce4ec;
-  color: #c2185b;
+  background: rgba(233, 30, 99, 0.15);
+  color: #e91e63;
 }
 
 .challenge-question {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .challenge-description {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 1rem;
 }
 
 .instruction {
   text-align: center;
-  color: #888;
+  color: var(--text-muted);
   margin-bottom: 1rem;
 }
 
@@ -150,7 +149,7 @@
 
 .image-item {
   aspect-ratio: 2;
-  background: #f5f5f5;
+  background: var(--border-color);
   border-radius: 12px;
   display: flex;
   align-items: center;
@@ -164,12 +163,12 @@
 
 .image-item:hover {
   transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
 .image-item.selected {
-  border-color: #667eea;
-  background: #e8ebff;
+  border-color: var(--primary-color);
+  background: rgba(255, 107, 53, 0.1);
 }
 
 .image-item.correct::after {
@@ -177,7 +176,7 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  background: #4caf50;
+  background: var(--success-color);
   color: white;
   width: 24px;
   height: 24px;
@@ -193,7 +192,7 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  background: #f44336;
+  background: var(--error-color);
   color: white;
   width: 24px;
   height: 24px;
@@ -208,7 +207,7 @@
   position: absolute;
   bottom: 8px;
   right: 8px;
-  background: #667eea;
+  background: var(--primary-color);
   color: white;
   width: 24px;
   height: 24px;
@@ -219,8 +218,11 @@
   font-size: 0.8rem;
 }
 
-.math-challenge,
-.text-challenge {
+.image-captcha {
+  width: 100px;
+}
+
+.math-challenge {
   margin-bottom: 1.5rem;
 }
 
@@ -235,7 +237,7 @@
 
 .math-number,
 .math-operator {
-  color: #333;
+  color: var(--text-primary);
 }
 
 .math-input {
@@ -243,55 +245,20 @@
   height: 50px;
   font-size: 1.5rem;
   text-align: center;
-  border: 3px solid #e0e0e0;
+  border: 3px solid var(--border-color);
   border-radius: 10px;
   outline: none;
   transition: border-color 0.3s ease;
+  background: var(--background-dark);
+  color: var(--text-primary);
 }
 
 .math-input:focus {
-  border-color: #667eea;
+  border-color: var(--primary-color);
 }
 
 .math-input.error {
-  border-color: #f44336;
-  animation: shake 0.5s ease;
-}
-
-.captcha-display {
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  padding: 1.5rem;
-  border-radius: 12px;
-  margin-bottom: 1rem;
-}
-
-.captcha-text {
-  display: block;
-  text-align: center;
-  font-size: 2.5rem;
-  font-family: 'Courier New', monospace;
-  color: white;
-  letter-spacing: 0.5rem;
-  font-weight: bold;
-}
-
-.text-input {
-  width: 100%;
-  padding: 1rem;
-  font-size: 1.25rem;
-  border: 3px solid #e0e0e0;
-  border-radius: 10px;
-  outline: none;
-  transition: border-color 0.3s ease;
-  text-align: center;
-}
-
-.text-input:focus {
-  border-color: #667eea;
-}
-
-.text-input.error {
-  border-color: #f44336;
+  border-color: var(--error-color);
   animation: shake 0.5s ease;
 }
 
@@ -319,7 +286,7 @@
 .slider-track {
   position: relative;
   height: 12px;
-  background: #e0e0e0;
+  background: var(--border-color);
   border-radius: 6px;
   cursor: pointer;
 }
@@ -329,7 +296,7 @@
   left: 0;
   top: 0;
   height: 100%;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
   border-radius: 6px;
 }
 
@@ -339,8 +306,8 @@
   transform: translate(-50%, -50%);
   width: 32px;
   height: 32px;
-  background: white;
-  border: 3px solid #667eea;
+  background: var(--background-card);
+  border: 3px solid var(--primary-color);
   border-radius: 50%;
   cursor: grab;
   display: flex;
@@ -359,7 +326,7 @@
 }
 
 .handle-icon {
-  color: #667eea;
+  color: var(--primary-color);
   font-size: 0.7rem;
   letter-spacing: -1px;
 }
@@ -369,11 +336,11 @@
   justify-content: space-between;
   margin-top: 0.5rem;
   font-size: 0.85rem;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .target-label {
-  color: #667eea;
+  color: var(--primary-color);
   font-weight: 600;
 }
 
@@ -381,43 +348,13 @@
   text-align: center;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #667eea;
+  color: var(--primary-color);
   margin-top: 1rem;
 }
 
-.hints-section {
-  margin-bottom: 1.5rem;
-}
-
-.hints-toggle {
-  background: none;
-  border: none;
-  color: #667eea;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0.5rem 0;
-}
-
-.hints-toggle:hover {
-  text-decoration: underline;
-}
-
-.hints-list {
-  background: #fff8e1;
-  padding: 1rem;
-  border-radius: 10px;
-  margin-top: 0.5rem;
-}
-
-.hint-item {
-  color: #666;
-  margin: 0.25rem 0;
-  font-size: 0.9rem;
-}
-
 .error-message {
-  background: #ffebee;
-  color: #c62828;
+  background: rgba(244, 67, 54, 0.15);
+  color: var(--error-color);
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -425,8 +362,8 @@
 }
 
 .success-message {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--success-color);
   padding: 1rem;
   border-radius: 10px;
   margin-bottom: 1rem;
@@ -456,26 +393,26 @@
 }
 
 .btn-secondary {
-  background: #f0f0f0;
-  color: #666;
+  background: var(--border-color);
+  color: var(--text-secondary);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #e0e0e0;
+  background: #4a4a4a;
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  background: linear-gradient(135deg, var(--success-color), #388e3c);
   color: white;
 }
 
