@@ -2,11 +2,11 @@
   <!-- Progress Bar -->
   <div class="progress-section">
     <div class="progress-info">
-      <span>Challenge {{ currentStage() + 1 }} of {{ totalStages }}</span>
-      <span class="progress-percent">{{ progressPercent }}% Complete</span>
+      <span> Challenge {{ currentStage() + 1 }} of {{ totalStages() }} </span>
+      <span class="progress-percent"> {{ progressPercent() }}% Complete </span>
     </div>
     <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="progressPercent"></div>
+      <div class="progress-fill" [style.width.%]="progressPercent()"></div>
     </div>
   </div>
 
@@ -140,7 +140,7 @@
         </button>
         <ng-container *ngIf="showHints()">
           <div class="hints-list">
-            <ng-container *ngFor="let hint of challenge.hints; trackBy: trackById">
+            <ng-container *ngFor="let hint of challenge.hints; trackBy: trackByValue">
               <p class="hint-item">• {{ hint }}</p>
             </ng-container>
           </div>

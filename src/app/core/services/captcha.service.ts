@@ -1,15 +1,22 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
-import { CaptchaChallenge, CaptchaType, CaptchaState, CaptchaOption, SessionResult, ChallengeResult } from '../models/captcha.model';
+import {
+  CaptchaChallenge,
+  CaptchaType,
+  CaptchaState,
+  CaptchaOption,
+  SessionResult,
+  ChallengeResult,
+} from '../models/captcha.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CaptchaService {
   private readonly STORAGE_KEY = 'angul_it_captcha_state';
   private readonly RESULTS_KEY = 'angul_it_results';
 
   private stateSignal = signal<CaptchaState>(this.getInitialState());
-  
+
   readonly currentStage = computed(() => this.stateSignal().currentStage);
   readonly completedStages = computed(() => this.stateSignal().completedStages);
   readonly isComplete = computed(() => this.stateSignal().isComplete);
@@ -19,7 +26,7 @@ export class CaptchaService {
 
   constructor() {
     this.loadState();
-    
+
     effect(() => {
       this.saveState(this.stateSignal());
     });
@@ -28,12 +35,12 @@ export class CaptchaService {
   private getInitialState(): CaptchaState {
     return {
       currentStage: 0,
-      totalStages: this.challenges.length,
+      totalStages: this.challenges?.length | 0,
       completedStages: [],
       answers: new Map(),
       startTime: new Date(),
       sessionId: this.generateSessionId(),
-      isComplete: false
+      isComplete: false,
     };
   }
 
@@ -49,7 +56,7 @@ export class CaptchaService {
         this.stateSignal.set({
           ...parsed,
           startTime: new Date(parsed.startTime),
-          answers: new Map(Object.entries(parsed.answers || {}))
+          answers: new Map(Object.entries(parsed.answers || {})),
         });
       }
     } catch (e) {
@@ -61,7 +68,7 @@ export class CaptchaService {
     try {
       const stateToSave = {
         ...state,
-        answers: Object.fromEntries(state.answers)
+        answers: Object.fromEntries(state.answers),
       };
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(stateToSave));
     } catch (e) {
@@ -89,11 +96,11 @@ export class CaptchaService {
     const newCompletedStages = new Set(this.stateSignal().completedStages);
     newCompletedStages.add(stageId);
 
-    this.stateSignal.update(state => ({
+    this.stateSignal.update((state) => ({
       ...state,
       answers: new Map(currentAnswers),
       completedStages: Array.from(newCompletedStages),
-      isComplete: newCompletedStages.size === this.challenges.length
+      isComplete: newCompletedStages.size === this.challenges.length,
     }));
 
     return isCorrect;
@@ -115,28 +122,26 @@ export class CaptchaService {
   }
 
   private validateImageSelection(challenge: CaptchaChallenge, selectedIds: string[]): boolean {
-    const correctIds = challenge.options
-      .filter(opt => opt.isCorrect)
-      .map(opt => opt.id);
-    
+    const correctIds = challenge.options.filter((opt) => opt.isCorrect).map((opt) => opt.id);
+
     if (selectedIds.length !== correctIds.length) return false;
-    return correctIds.every(id => selectedIds.includes(id));
+    return correctIds.every((id) => selectedIds.includes(id));
   }
 
   private validateTextInput(challenge: CaptchaChallenge, answer: string): boolean {
-    const correctAnswer = challenge.options.find(opt => opt.isCorrect)?.label?.toLowerCase();
+    const correctAnswer = challenge.options.find((opt) => opt.isCorrect)?.label?.toLowerCase();
     return answer.toLowerCase().trim() === correctAnswer;
   }
 
   private validateSliderPuzzle(challenge: CaptchaChallenge, position: number): boolean {
-    const targetPosition = challenge.options.find(opt => opt.isCorrect)?.label;
+    const targetPosition = challenge.options.find((opt) => opt.isCorrect)?.label;
     if (!targetPosition) return false;
     const target = parseInt(targetPosition, 10);
     return Math.abs(position - target) <= 5;
   }
 
   private validateMathQuestion(challenge: CaptchaChallenge, answer: number): boolean {
-    const correctAnswer = challenge.options.find(opt => opt.isCorrect)?.label;
+    const correctAnswer = challenge.options.find((opt) => opt.isCorrect)?.label;
     return answer === parseInt(correctAnswer || '0', 10);
   }
 
@@ -159,9 +164,9 @@ export class CaptchaService {
   }
 
   goToStage(stage: number): void {
-    this.stateSignal.update(state => ({
+    this.stateSignal.update((state) => ({
       ...state,
-      currentStage: stage
+      currentStage: stage,
     }));
   }
 
@@ -184,7 +189,7 @@ export class CaptchaService {
     const results: ChallengeResult[] = [];
     let correctCount = 0;
 
-    state.completedStages.forEach(stageId => {
+    state.completedStages.forEach((stageId) => {
       const answer = state.answers.get(stageId);
       const challenge = this.challenges[stageId];
       const isCorrect = this.validateAnswer(challenge, answer);
@@ -194,7 +199,7 @@ export class CaptchaService {
         challengeId: stageId,
         isCorrect,
         attempts: 1,
-        completedAt: new Date()
+        completedAt: new Date(),
       });
     });
 
@@ -206,7 +211,7 @@ export class CaptchaService {
       incorrectAnswers: state.completedStages.length - correctCount,
       startTime: state.startTime,
       completionTime: new Date(),
-      results
+      results,
     };
 
     localStorage.setItem(this.RESULTS_KEY, JSON.stringify(sessionResult));
@@ -235,9 +240,9 @@ export class CaptchaService {
           { id: 'img3', imageUrl: '🐱', label: 'Cat Image 2', isCorrect: true },
           { id: 'img4', imageUrl: '🐦', label: 'Bird Image 1', isCorrect: false },
           { id: 'img5', imageUrl: '🚗', label: 'Car Image 1', isCorrect: false },
-          { id: 'img6', imageUrl: '🐱', label: 'Cat Image 3', isCorrect: true }
+          { id: 'img6', imageUrl: '🐱', label: 'Cat Image 3', isCorrect: true },
         ],
-        hints: ['Look for feline features', 'Cats have pointed ears and whiskers']
+        hints: ['Look for feline features', 'Cats have pointed ears and whiskers'],
       },
       {
         id: 1,
@@ -245,10 +250,8 @@ export class CaptchaService {
         question: 'Simple Math Verification',
         description: 'Solve this simple math problem to continue',
         requiredCorrect: 1,
-        options: [
-          { id: 'math1', label: '7', isCorrect: true }
-        ],
-        hints: ['Add the numbers together']
+        options: [{ id: 'math1', label: '7', isCorrect: true }],
+        hints: ['Add the numbers together'],
       },
       {
         id: 2,
@@ -256,10 +259,8 @@ export class CaptchaService {
         question: 'Text Verification',
         description: 'Type the word you see below (case insensitive)',
         requiredCorrect: 1,
-        options: [
-          { id: 'text1', label: 'ANGUL-IT', isCorrect: true }
-        ],
-        hints: ['The word is written in uppercase']
+        options: [{ id: 'text1', label: 'ANGUL-IT', isCorrect: true }],
+        hints: ['The word is written in uppercase'],
       },
       {
         id: 3,
@@ -273,9 +274,9 @@ export class CaptchaService {
           { id: 'light3', imageUrl: '🚦', label: 'Traffic Light 2', isCorrect: true },
           { id: 'light4', imageUrl: '🚲', label: 'Bicycle 1', isCorrect: false },
           { id: 'light5', imageUrl: '🏠', label: 'House 1', isCorrect: false },
-          { id: 'light6', imageUrl: '🚦', label: 'Traffic Light 3', isCorrect: true }
+          { id: 'light6', imageUrl: '🚦', label: 'Traffic Light 3', isCorrect: true },
         ],
-        hints: ['Traffic lights have three colors: red, yellow, and green']
+        hints: ['Traffic lights have three colors: red, yellow, and green'],
       },
       {
         id: 4,
@@ -283,11 +284,9 @@ export class CaptchaService {
         question: 'Slider Verification',
         description: 'Slide the handle to match the target position (target: 50%)',
         requiredCorrect: 1,
-        options: [
-          { id: 'slider1', label: '50', isCorrect: true }
-        ],
-        hints: ['The target is exactly in the middle']
-      }
+        options: [{ id: 'slider1', label: '50', isCorrect: true }],
+        hints: ['The target is exactly in the middle'],
+      },
     ];
   }
 }

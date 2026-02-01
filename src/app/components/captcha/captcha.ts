@@ -144,6 +144,18 @@ export class CaptchaComponent {
     }
   }
 
+  trackByIndex(index: number): number {
+    return index;
+  }
+
+  trackById(index: number, item: { id: string }): string {
+    return item.id;
+  }
+
+  trackByValue(index: number, item: string): string {
+    return item;
+  }
+
   goPrevious(): void {
     this.captchaService.goToPreviousStage();
     this.resetCurrentState();
