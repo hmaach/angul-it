@@ -89,6 +89,9 @@ export class CaptchaService {
     const challenge = this.challenges[stageId];
     if (!challenge) return false;
 
+    console.log(answer);
+    
+
     const isCorrect = this.validateAnswer(challenge, answer);
     const currentAnswers = this.stateSignal().answers;
     currentAnswers.set(stageId, answer);
@@ -110,8 +113,6 @@ export class CaptchaService {
     switch (challenge.type) {
       case CaptchaType.IMAGE_SELECTION:
         return this.validateImageSelection(challenge, answer);
-      case CaptchaType.TEXT_INPUT:
-        return this.validateTextInput(challenge, answer);
       case CaptchaType.SLIDER_PUZZLE:
         return this.validateSliderPuzzle(challenge, answer);
       case CaptchaType.MATH_QUESTION:
@@ -128,12 +129,9 @@ export class CaptchaService {
     return correctIds.every((id) => selectedIds.includes(id));
   }
 
-  private validateTextInput(challenge: CaptchaChallenge, answer: string): boolean {
-    const correctAnswer = challenge.options.find((opt) => opt.isCorrect)?.label?.toLowerCase();
-    return answer.toLowerCase().trim() === correctAnswer;
-  }
-
   private validateSliderPuzzle(challenge: CaptchaChallenge, position: number): boolean {
+    console.log(position);
+
     const targetPosition = challenge.options.find((opt) => opt.isCorrect)?.label;
     if (!targetPosition) return false;
     const target = parseInt(targetPosition, 10);
@@ -242,7 +240,6 @@ export class CaptchaService {
           { id: 'img5', imageUrl: '🚗', label: 'Car Image 1', isCorrect: false },
           { id: 'img6', imageUrl: '🐱', label: 'Cat Image 3', isCorrect: true },
         ],
-        hints: ['Look for feline features', 'Cats have pointed ears and whiskers'],
       },
       {
         id: 1,
@@ -251,32 +248,6 @@ export class CaptchaService {
         description: 'Solve this simple math problem to continue',
         requiredCorrect: 1,
         options: [{ id: 'math1', label: '7', isCorrect: true }],
-        hints: ['Add the numbers together'],
-      },
-      {
-        id: 2,
-        type: CaptchaType.TEXT_INPUT,
-        question: 'Text Verification',
-        description: 'Type the word you see below (case insensitive)',
-        requiredCorrect: 1,
-        options: [{ id: 'text1', label: 'ANGUL-IT', isCorrect: true }],
-        hints: ['The word is written in uppercase'],
-      },
-      {
-        id: 3,
-        type: CaptchaType.IMAGE_SELECTION,
-        question: 'Select all images with TRAFFIC LIGHTS',
-        description: 'Identify all traffic light images',
-        requiredCorrect: 2,
-        options: [
-          { id: 'light1', imageUrl: '🚦', label: 'Traffic Light 1', isCorrect: true },
-          { id: 'light2', imageUrl: '🚗', label: 'Car 1', isCorrect: false },
-          { id: 'light3', imageUrl: '🚦', label: 'Traffic Light 2', isCorrect: true },
-          { id: 'light4', imageUrl: '🚲', label: 'Bicycle 1', isCorrect: false },
-          { id: 'light5', imageUrl: '🏠', label: 'House 1', isCorrect: false },
-          { id: 'light6', imageUrl: '🚦', label: 'Traffic Light 3', isCorrect: true },
-        ],
-        hints: ['Traffic lights have three colors: red, yellow, and green'],
       },
       {
         id: 4,
@@ -285,7 +256,6 @@ export class CaptchaService {
         description: 'Slide the handle to match the target position (target: 50%)',
         requiredCorrect: 1,
         options: [{ id: 'slider1', label: '50', isCorrect: true }],
-        hints: ['The target is exactly in the middle'],
       },
     ];
   }

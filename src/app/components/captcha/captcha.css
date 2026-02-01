@@ -149,7 +149,7 @@
 }
 
 .image-item {
-  aspect-ratio: 1;
+  aspect-ratio: 2;
   background: #f5f5f5;
   border-radius: 12px;
   display: flex;

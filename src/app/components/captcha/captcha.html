@@ -1,5 +1,4 @@
 <div class="captcha-container">
-  <!-- Progress Bar -->
   <div class="progress-section">
     <div class="progress-info">
       <span> Challenge {{ currentStage() + 1 }} of {{ totalStages() }} </span>
@@ -10,7 +9,6 @@
     </div>
   </div>
 
-  <!-- Stage Indicators -->
   <div class="stage-indicators">
     <ng-container *ngFor="let stage of stages(); let i = index; trackBy: trackByIndex">
       <div
@@ -33,7 +31,6 @@
     </ng-container>
   </div>
 
-  <!-- Challenge Card -->
   <ng-container *ngIf="currentChallenge() as challenge">
     <div class="challenge-card">
       <div class="challenge-header">
@@ -90,25 +87,7 @@
           </div>
         </div>
       </ng-container>
-
-      <!-- Text Input Challenge -->
-      <ng-container *ngIf="challenge.type === CaptchaType.TEXT_INPUT">
-        <div class="text-challenge">
-          <div class="captcha-display">
-            <span class="captcha-text">{{ challenge.options[0]?.label }}</span>
-          </div>
-          <input
-            type="text"
-            class="text-input"
-            [(ngModel)]="textAnswer"
-            (input)="onInputChange()"
-            placeholder="Type what you see above"
-            [class.error]="hasError()"
-            autocomplete="off"
-          />
-        </div>
-      </ng-container>
-
+      
       <!-- Slider Puzzle Challenge -->
       <ng-container *ngIf="challenge.type === CaptchaType.SLIDER_PUZZLE">
         <div class="slider-challenge">
@@ -133,20 +112,6 @@
           <p class="slider-value-display">{{ sliderValue() }}%</p>
         </div>
       </ng-container>
-
-      <div class="hints-section">
-        <button class="hints-toggle" (click)="toggleHints()">
-          💡 {{ showHints() ? 'Hide' : 'Show' }} Hints
-        </button>
-        <ng-container *ngIf="showHints()">
-          <div class="hints-list">
-            <ng-container *ngFor="let hint of challenge.hints; trackBy: trackByValue">
-              <p class="hint-item">• {{ hint }}</p>
-            </ng-container>
-          </div>
-        </ng-container>
-      </div>
-
       <!-- Error Message -->
       <ng-container *ngIf="hasError()">
         <div class="error-message">⚠️ {{ errorMessage() }}</div>

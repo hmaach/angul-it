@@ -28,7 +28,6 @@ export class CaptchaComponent {
   });
 
   showResults = signal(false);
-  showHints = signal(false);
   hasError = signal(false);
   errorMessage = signal('');
   successMessage = signal('');
@@ -47,7 +46,6 @@ export class CaptchaComponent {
   getChallengeTypeLabel(type: CaptchaType): string {
     const labels: Record<CaptchaType, string> = {
       [CaptchaType.IMAGE_SELECTION]: 'Image Selection',
-      [CaptchaType.TEXT_INPUT]: 'Text Verification',
       [CaptchaType.SLIDER_PUZZLE]: 'Slider Puzzle',
       [CaptchaType.MATH_QUESTION]: 'Math Challenge',
     };
@@ -75,10 +73,6 @@ export class CaptchaComponent {
     this.hasError.set(false);
   }
 
-  toggleHints(): void {
-    this.showHints.update((v) => !v);
-  }
-
   canSubmit(): boolean {
     const challenge = this.currentChallenge();
     if (!challenge) return false;
@@ -86,7 +80,6 @@ export class CaptchaComponent {
     switch (challenge.type) {
       case CaptchaType.IMAGE_SELECTION:
         return this.selectedImages().length > 0;
-      case CaptchaType.TEXT_INPUT:
       case CaptchaType.MATH_QUESTION:
         return this.textAnswer().toString().trim().length > 0;
       case CaptchaType.SLIDER_PUZZLE:
@@ -105,9 +98,6 @@ export class CaptchaComponent {
     switch (challenge.type) {
       case CaptchaType.IMAGE_SELECTION:
         answer = this.selectedImages();
-        break;
-      case CaptchaType.TEXT_INPUT:
-        answer = this.textAnswer();
         break;
       case CaptchaType.MATH_QUESTION:
         answer = parseInt(this.textAnswer(), 10);
@@ -133,8 +123,6 @@ export class CaptchaComponent {
     switch (type) {
       case CaptchaType.IMAGE_SELECTION:
         return 'Some selections are incorrect. Please try again.';
-      case CaptchaType.TEXT_INPUT:
-        return 'The text does not match. Please try again.';
       case CaptchaType.MATH_QUESTION:
         return 'Incorrect answer. Please check your math.';
       case CaptchaType.SLIDER_PUZZLE:
@@ -222,7 +210,6 @@ export class CaptchaComponent {
     if (!challenge) return;
 
     this.showResults.set(false);
-    this.showHints.set(false);
     this.hasError.set(false);
     this.errorMessage.set('');
     this.successMessage.set('');

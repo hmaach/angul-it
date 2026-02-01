@@ -5,7 +5,6 @@ export interface CaptchaChallenge {
   description: string;
   requiredCorrect: number;
   options: CaptchaOption[];
-  hints: string[];
 }
 
 export interface CaptchaOption {
@@ -18,7 +17,6 @@ export interface CaptchaOption {
 
 export enum CaptchaType {
   IMAGE_SELECTION = 'image_selection',
-  TEXT_INPUT = 'text_input',
   SLIDER_PUZZLE = 'slider_puzzle',
   MATH_QUESTION = 'math_question'
 }

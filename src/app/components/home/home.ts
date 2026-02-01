@@ -2,12 +2,33 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CaptchaService } from '../../core/services/captcha.service';
+import { NgIcon, provideIcons } from '@ng-icons/core';
+import {
+  gameBlaster,
+  gamePadlock,
+  gameOnTarget,
+  gameShieldEchoes,
+  gameConwayLifeGlider,
+  gameSideswipe,
+  gameThink,
+} from '@ng-icons/game-icons';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, NgIcon],
   templateUrl: './home.html',
   styleUrl: './home.css',
+  viewProviders: [
+    provideIcons({
+      gamePadlock,
+      gameBlaster,
+      gameOnTarget,
+      gameShieldEchoes,
+      gameConwayLifeGlider,
+      gameSideswipe,
+      gameThink,
+    }),
+  ],
 })
 export class HomeComponent {
   isLoading = false;
