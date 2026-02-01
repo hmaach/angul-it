@@ -1,0 +1,50 @@
+<div class="home-container">
+  <div class="hero-section">
+    <h1 class="app-title"><ng-icon name="gameShieldEchoes" /> Angul-It</h1>
+    <p class="tagline">Advanced Human Verification System</p>
+  </div>
+
+  <div class="info-cards">
+    <div class="card">
+      <div class="card-icon"><ng-icon name="gamePadlock" /></div>
+      <h3>Secure</h3>
+    </div>
+    <div class="card">
+      <div class="card-icon"><ng-icon name="gameBlaster" /></div>
+      <h3>Fast</h3>
+    </div>
+    <div class="card">
+      <div class="card-icon"><ng-icon name="gameOnTarget" /></div>
+      <h3>Accurate</h3>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <h2>What to Expect</h2>
+    <ul class="features-list">
+      <li>
+        <span class="feature-icon"><ng-icon name="gameConwayLifeGlider" /></span>
+        <span>Image selection challenges</span>
+      </li>
+      <li>
+        <span class="feature-icon"><ng-icon name="gameThink" /></span>
+        <span>Simple math verification</span>
+      </li>
+      <li>
+        <span class="feature-icon"><ng-icon name="gameSideswipe" /></span>
+        <span>Interactive slider puzzles</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="cta-section">
+    <button class="start-button" (click)="startChallenge()" [disabled]="isLoading">
+      @if (isLoading) {
+        <span class="loading-spinner"></span>
+        Loading...
+      } @else {
+        Start Verification
+      }
+    </button>
+  </div>
+</div>

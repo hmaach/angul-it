@@ -1,0 +1,148 @@
+<div class="captcha-container">
+  <div class="progress-section">
+    <div class="progress-info">
+      <span> Challenge {{ currentStage() + 1 }} of {{ totalStages() }} </span>
+      <span class="progress-percent"> {{ progressPercent() }}% Complete </span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="progressPercent()"></div>
+    </div>
+  </div>
+
+  <div class="stage-indicators">
+    <ng-container *ngFor="let stage of stages(); let i = index; trackBy: trackByIndex">
+      <div
+        class="stage-dot"
+        [class.completed]="i < currentStage()"
+        [class.current]="i === currentStage()"
+        [class.pending]="i > currentStage()"
+        (click)="goToStage(i)"
+      >
+        <ng-container *ngIf="i < currentStage()"> ✓ </ng-container>
+        <ng-container *ngIf="i >= currentStage()">
+          {{ i + 1 }}
+        </ng-container>
+      </div>
+      <div
+        *ngIf="i < stages().length - 1"
+        class="stage-line"
+        [class.completed]="i < currentStage()"
+      ></div>
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="currentChallenge() as challenge">
+    <div class="challenge-card">
+      <div class="challenge-header">
+        <span class="challenge-type-badge" [attr.data-type]="challenge.type">
+          {{ getChallengeTypeLabel(challenge.type) }}
+        </span>
+        <h2 class="challenge-question">{{ challenge.question }}</h2>
+        <p class="challenge-description">{{ challenge.description }}</p>
+      </div>
+
+      <!-- Image Selection Challenge -->
+      <ng-container *ngIf="challenge.type === CaptchaType.IMAGE_SELECTION">
+        <div class="image-selection-challenge">
+          <p class="instruction">
+            <small>Select all images that match the criteria</small>
+          </p>
+          <div class="image-grid">
+            <ng-container *ngFor="let option of challenge.options; trackBy: trackById">
+              <div
+                class="image-item"
+                [class.selected]="isOptionSelected(option.id)"
+                [class.correct]="showResults() && option.isCorrect"
+                [class.incorrect]="
+                  showResults() && isOptionSelected(option.id) && !option.isCorrect
+                "
+                (click)="toggleImageSelection(option.id)"
+              >
+                <img class="image-captcha" [src]="option.imageUrl" alt="{{ option.label }}" />
+                <ng-container *ngIf="isOptionSelected(option.id)">
+                  <span class="selection-indicator">✓</span>
+                </ng-container>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Math Question Challenge -->
+      <ng-container *ngIf="challenge.type === CaptchaType.MATH_QUESTION">
+        <div class="math-challenge">
+          <div class="math-display">
+            <span class="math-number">5</span>
+            <span class="math-operator">+</span>
+            <span class="math-number">2</span>
+            <span class="math-operator">=</span>
+            <input
+              type="number"
+              class="math-input"
+              [(ngModel)]="textAnswer"
+              (input)="onInputChange()"
+              placeholder="?"
+              [class.error]="hasError()"
+            />
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Slider Puzzle Challenge -->
+      <ng-container *ngIf="challenge.type === CaptchaType.SLIDER_PUZZLE">
+        <div class="slider-challenge">
+          <div class="slider-container">
+            <div class="slider-track" #sliderTrack>
+              <div class="slider-fill" [style.width.%]="sliderValue()"></div>
+              <div
+                class="slider-handle"
+                [style.left.%]="sliderValue()"
+                (mousedown)="startDrag($event)"
+                (touchstart)="startDrag($event)"
+              >
+                <span class="handle-icon">|||</span>
+              </div>
+            </div>
+            <div class="slider-labels">
+              <span>0%</span>
+              <span class="target-label">Target: 50%</span>
+              <span>100%</span>
+            </div>
+          </div>
+          <p class="slider-value-display">{{ sliderValue() }}%</p>
+        </div>
+      </ng-container>
+      <!-- Error Message -->
+      <ng-container *ngIf="hasError()">
+        <div class="error-message">{{ errorMessage() }}</div>
+      </ng-container>
+
+      <!-- Success Message -->
+      <ng-container *ngIf="showResults()">
+        <div class="success-message">{{ successMessage() }}</div>
+      </ng-container>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <ng-container *ngIf="!showResults()">
+          <button
+            class="btn btn-secondary"
+            (click)="goPrevious()"
+            [disabled]="currentStage() === 0"
+          >
+            ← Previous
+          </button>
+          <button class="btn btn-primary" (click)="submitAnswer()" [disabled]="!canSubmit()">
+            {{ isLastStage() ? 'Complete Challenge' : 'Next →' }}
+          </button>
+        </ng-container>
+        <ng-container *ngIf="showResults() && !isLastStage()">
+          <button class="btn btn-primary" (click)="goNext()">Continue →</button>
+        </ng-container>
+        <ng-container *ngIf="showResults() && isLastStage()">
+          <button class="btn btn-success" (click)="viewResults()">View Results</button>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</div>
