@@ -58,7 +58,7 @@
                 "
                 (click)="toggleImageSelection(option.id)"
               >
-                <span class="image-emoji">{{ option.imageUrl }}</span>
+                <img class="image-captcha" [src]="option.imageUrl" alt="{{ option.label }}" />
                 <ng-container *ngIf="isOptionSelected(option.id)">
                   <span class="selection-indicator">✓</span>
                 </ng-container>
@@ -87,12 +87,12 @@
           </div>
         </div>
       </ng-container>
-      
+
       <!-- Slider Puzzle Challenge -->
       <ng-container *ngIf="challenge.type === CaptchaType.SLIDER_PUZZLE">
         <div class="slider-challenge">
           <div class="slider-container">
-            <div class="slider-track">
+            <div class="slider-track" #sliderTrack>
               <div class="slider-fill" [style.width.%]="sliderValue()"></div>
               <div
                 class="slider-handle"
@@ -114,12 +114,12 @@
       </ng-container>
       <!-- Error Message -->
       <ng-container *ngIf="hasError()">
-        <div class="error-message">⚠️ {{ errorMessage() }}</div>
+        <div class="error-message">{{ errorMessage() }}</div>
       </ng-container>
 
       <!-- Success Message -->
       <ng-container *ngIf="showResults()">
-        <div class="success-message">✅ {{ successMessage() }}</div>
+        <div class="success-message">{{ successMessage() }}</div>
       </ng-container>
 
       <!-- Action Buttons -->
@@ -140,7 +140,7 @@
           <button class="btn btn-primary" (click)="goNext()">Continue →</button>
         </ng-container>
         <ng-container *ngIf="showResults() && isLastStage()">
-          <button class="btn btn-success" (click)="viewResults()">🎉 View Results</button>
+          <button class="btn btn-success" (click)="viewResults()">View Results</button>
         </ng-container>
       </div>
     </div>

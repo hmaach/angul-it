@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,18 +14,15 @@ import { CaptchaService } from '../../core/services/captcha.service';
 export class CaptchaComponent {
   CaptchaType = CaptchaType;
 
+  @ViewChild('sliderTrack') sliderTrack?: ElementRef;
+
   currentStage = computed(() => this.captchaService.currentStage());
   totalStages = computed(() => this.captchaService.getChallenges().length);
-
-  progressPercent = computed(() => {
-    return Math.round(((this.currentStage() + 1) / this.totalStages()) * 100);
-  });
-
+  progressPercent = computed(() =>
+    Math.round(((this.currentStage() + 1) / this.totalStages()) * 100),
+  );
   stages = computed(() => Array.from({ length: this.totalStages() }, (_, i) => i));
-
-  currentChallenge = computed(() => {
-    return this.captchaService.getCurrentChallenge();
-  });
+  currentChallenge = computed(() => this.captchaService.getCurrentChallenge());
 
   showResults = signal(false);
   hasError = signal(false);
@@ -58,18 +55,11 @@ export class CaptchaComponent {
 
   toggleImageSelection(optionId: string): void {
     if (this.showResults()) return;
-
-    this.selectedImages.update((selected) => {
-      if (selected.includes(optionId)) {
-        return selected.filter((id) => id !== optionId);
-      } else {
-        return [...selected, optionId];
-      }
-    });
-    this.hasError.set(false);
-  }
-
-  onInputChange(): void {
+    this.selectedImages.update((selected) =>
+      selected.includes(optionId)
+        ? selected.filter((id) => id !== optionId)
+        : [...selected, optionId],
+    );
     this.hasError.set(false);
   }
 
@@ -94,7 +84,6 @@ export class CaptchaComponent {
     if (!challenge) return;
 
     let answer: any;
-
     switch (challenge.type) {
       case CaptchaType.IMAGE_SELECTION:
         answer = this.selectedImages();
@@ -107,7 +96,9 @@ export class CaptchaComponent {
         break;
     }
 
+    
     const isCorrect = this.captchaService.submitAnswer(challenge.id, answer);
+    console.log(isCorrect);
 
     if (isCorrect) {
       this.successMessage.set('Correct! Well done.');
@@ -169,6 +160,10 @@ export class CaptchaComponent {
     this.router.navigate(['/result']);
   }
 
+  onInputChange(): void {
+    this.hasError.set(false);
+  }
+
   startDrag(event: MouseEvent | TouchEvent): void {
     event.preventDefault();
     this.isDragging = true;
@@ -183,12 +178,9 @@ export class CaptchaComponent {
   }
 
   private onDrag(event: MouseEvent | TouchEvent): void {
-    if (!this.isDragging) return;
+    if (!this.isDragging || !this.sliderTrack) return;
 
-    const track = document.querySelector('.slider-track');
-    if (!track) return;
-
-    const rect = track.getBoundingClientRect();
+    const rect = this.sliderTrack.nativeElement.getBoundingClientRect();
     const clientX = 'touches' in event ? event.touches[0].clientX : (event as MouseEvent).clientX;
 
     let percentage = ((clientX - rect.left) / rect.width) * 100;
@@ -206,9 +198,6 @@ export class CaptchaComponent {
   }
 
   private resetCurrentState(): void {
-    const challenge = this.currentChallenge();
-    if (!challenge) return;
-
     this.showResults.set(false);
     this.hasError.set(false);
     this.errorMessage.set('');

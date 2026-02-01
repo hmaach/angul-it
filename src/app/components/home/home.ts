@@ -3,15 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CaptchaService } from '../../core/services/captcha.service';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import {
-  gameBlaster,
-  gamePadlock,
-  gameOnTarget,
-  gameShieldEchoes,
-  gameConwayLifeGlider,
-  gameSideswipe,
-  gameThink,
-} from '@ng-icons/game-icons';
+import { gamePadlock, gameBlaster, gameOnTarget } from '@ng-icons/game-icons';
 
 @Component({
   selector: 'app-home',
@@ -23,10 +15,6 @@ import {
       gamePadlock,
       gameBlaster,
       gameOnTarget,
-      gameShieldEchoes,
-      gameConwayLifeGlider,
-      gameSideswipe,
-      gameThink,
     }),
   ],
 })
@@ -40,7 +28,6 @@ export class HomeComponent {
 
   startChallenge(): void {
     this.isLoading = true;
-
     setTimeout(() => {
       this.captchaService.resetChallenge();
       this.router.navigate(['/captcha']);

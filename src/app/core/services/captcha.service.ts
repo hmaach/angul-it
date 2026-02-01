@@ -1,12 +1,6 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
-import {
-  CaptchaChallenge,
-  CaptchaType,
-  CaptchaState,
-  CaptchaOption,
-  SessionResult,
-  ChallengeResult,
-} from '../models/captcha.model';
+import { CaptchaChallenge, CaptchaType, CaptchaState } from '../models/captcha.model';
+import { ChallengeResult, SessionResult } from '../models/result.model';
 
 @Injectable({
   providedIn: 'root',
@@ -90,7 +84,6 @@ export class CaptchaService {
     if (!challenge) return false;
 
     console.log(answer);
-    
 
     const isCorrect = this.validateAnswer(challenge, answer);
     const currentAnswers = this.stateSignal().answers;
@@ -103,7 +96,7 @@ export class CaptchaService {
       ...state,
       answers: new Map(currentAnswers),
       completedStages: Array.from(newCompletedStages),
-      isComplete: newCompletedStages.size === this.challenges.length,
+      isComplete: newCompletedStages.size === this.challenges?.length,
     }));
 
     return isCorrect;
@@ -122,30 +115,40 @@ export class CaptchaService {
     }
   }
 
-  private validateImageSelection(challenge: CaptchaChallenge, selectedIds: string[]): boolean {
+  private validateImageSelection(
+    challenge: CaptchaChallenge,
+    selectedIds: string[] | undefined,
+  ): boolean {
+    if (!Array.isArray(selectedIds)) {
+      return false;
+    }
+
     const correctIds = challenge.options.filter((opt) => opt.isCorrect).map((opt) => opt.id);
 
     if (selectedIds.length !== correctIds.length) return false;
     return correctIds.every((id) => selectedIds.includes(id));
   }
 
-  private validateSliderPuzzle(challenge: CaptchaChallenge, position: number): boolean {
-    console.log(position);
+  private validateSliderPuzzle(challenge: CaptchaChallenge, position: number | undefined): boolean {
+    if (typeof position !== 'number') return false;
 
     const targetPosition = challenge.options.find((opt) => opt.isCorrect)?.label;
     if (!targetPosition) return false;
+
     const target = parseInt(targetPosition, 10);
     return Math.abs(position - target) <= 5;
   }
 
-  private validateMathQuestion(challenge: CaptchaChallenge, answer: number): boolean {
+  private validateMathQuestion(challenge: CaptchaChallenge, answer: number | undefined): boolean {
+    if (typeof answer !== 'number') return false;
+
     const correctAnswer = challenge.options.find((opt) => opt.isCorrect)?.label;
     return answer === parseInt(correctAnswer || '0', 10);
   }
 
   goToNextStage(): boolean {
     const current = this.stateSignal().currentStage;
-    if (current < this.challenges.length - 1) {
+    if (current < this.challenges?.length - 1) {
       this.goToStage(current + 1);
       return true;
     }
@@ -203,10 +206,10 @@ export class CaptchaService {
 
     const sessionResult: SessionResult = {
       sessionId: state.sessionId,
-      totalChallenges: this.challenges.length,
-      completedChallenges: state.completedStages.length,
+      totalChallenges: this.challenges?.length,
+      completedChallenges: state.completedStages?.length,
       correctAnswers: correctCount,
-      incorrectAnswers: state.completedStages.length - correctCount,
+      incorrectAnswers: state.completedStages?.length - correctCount,
       startTime: state.startTime,
       completionTime: new Date(),
       results,
@@ -233,12 +236,12 @@ export class CaptchaService {
         description: 'Click on all pictures that contain cats to prove you are human',
         requiredCorrect: 2,
         options: [
-          { id: 'img1', imageUrl: '🐱', label: 'Cat Image 1', isCorrect: true },
-          { id: 'img2', imageUrl: '🐶', label: 'Dog Image 1', isCorrect: false },
-          { id: 'img3', imageUrl: '🐱', label: 'Cat Image 2', isCorrect: true },
-          { id: 'img4', imageUrl: '🐦', label: 'Bird Image 1', isCorrect: false },
-          { id: 'img5', imageUrl: '🚗', label: 'Car Image 1', isCorrect: false },
-          { id: 'img6', imageUrl: '🐱', label: 'Cat Image 3', isCorrect: true },
+          { id: 'img1', imageUrl: '/images/cat1.png', label: 'Image', isCorrect: true },
+          { id: 'img2', imageUrl: '/images/random1.png', label: 'Image', isCorrect: false },
+          { id: 'img3', imageUrl: '/images/cat2.png', label: 'Image', isCorrect: true },
+          { id: 'img4', imageUrl: '/images/random2.png', label: 'Image', isCorrect: false },
+          { id: 'img5', imageUrl: '/images/random3.png', label: 'Image', isCorrect: false },
+          { id: 'img6', imageUrl: '/images/cat3.png', label: 'Image', isCorrect: true },
         ],
       },
       {
@@ -250,7 +253,7 @@ export class CaptchaService {
         options: [{ id: 'math1', label: '7', isCorrect: true }],
       },
       {
-        id: 4,
+        id: 2,
         type: CaptchaType.SLIDER_PUZZLE,
         question: 'Slider Verification',
         description: 'Slide the handle to match the target position (target: 50%)',

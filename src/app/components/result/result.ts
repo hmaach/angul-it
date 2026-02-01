@@ -19,7 +19,7 @@ export class ResultComponent {
 
   ngOnInit(): void {
     if (!this.captchaService.canAccessResult()) {
-      this.router.navigate(['/captcha']);
+      this.router.navigate(['/']);
     }
   }
 

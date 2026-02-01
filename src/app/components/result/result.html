@@ -2,7 +2,6 @@
   @if (sessionResult(); as result) {
     <div class="result-card">
       <div class="result-header">
-        <div class="celebration">🎉</div>
         <h1 class="result-title">Verification Complete!</h1>
         <p class="result-subtitle">Session ID: {{ result.sessionId }}</p>
       </div>
@@ -16,20 +15,12 @@
 
       <div class="stats-grid">
         <div class="stat-item">
-          <span class="stat-value">{{ result.correctAnswers }}</span>
-          <span class="stat-label">✓ Correct</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">{{ result.incorrectAnswers }}</span>
-          <span class="stat-label">✗ Incorrect</span>
-        </div>
-        <div class="stat-item">
           <span class="stat-value">{{ result.totalChallenges }}</span>
-          <span class="stat-label">📊 Total Challenges</span>
+          <span class="stat-label">Total Challenges</span>
         </div>
         <div class="stat-item">
           <span class="stat-value">{{ getDuration() }}</span>
-          <span class="stat-label">⏱️ Duration</span>
+          <span class="stat-label">Duration</span>
         </div>
       </div>
 
@@ -59,13 +50,12 @@
       </div>
 
       <div class="action-buttons">
-        <button class="btn btn-secondary" (click)="restartChallenge()">🔄 Restart Challenge</button>
-        <button class="btn btn-primary" (click)="goHome()">🏠 Back to Home</button>
+        <button class="btn btn-secondary" (click)="restartChallenge()">Restart Challenge</button>
+        <button class="btn btn-primary" (click)="goHome()">Back to Home</button>
       </div>
     </div>
   } @else {
     <div class="no-results">
-      <div class="error-icon">⚠️</div>
       <h2>No Results Found</h2>
       <p>It looks like you haven't completed any challenges yet.</p>
       <button class="btn btn-primary" (click)="goCaptcha()">Start Verification</button>
