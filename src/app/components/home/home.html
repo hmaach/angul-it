@@ -1,0 +1,60 @@
+<div class="home-container">
+  <div class="hero-section">
+    <h1 class="app-title">🛡️ Angul-It</h1>
+    <p class="tagline">Advanced Human Verification System</p>
+  </div>
+
+  <div class="info-cards">
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <h3>Secure</h3>
+      <p>Multi-layer verification to ensure only humans pass through</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>Fast</h3>
+      <p>Quick and intuitive challenges that respect your time</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>Accurate</h3>
+      <p>Advanced detection to block bots and automated scripts</p>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <h2>What to Expect</h2>
+    <ul class="features-list">
+      <li>
+        <span class="feature-icon">🖼️</span>
+        <span>Image selection challenges</span>
+      </li>
+      <li>
+        <span class="feature-icon">🔢</span>
+        <span>Simple math verification</span>
+      </li>
+      <li>
+        <span class="feature-icon">📝</span>
+        <span>Text input challenges</span>
+      </li>
+      <li>
+        <span class="feature-icon">🎚️</span>
+        <span>Interactive slider puzzles</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="cta-section">
+    <button class="start-button" (click)="startChallenge()" [disabled]="isLoading">
+      @if (isLoading) {
+        <span class="loading-spinner"></span>
+        Loading...
+      } @else {
+        🚀 Start Verification
+      }
+    </button>
+    <p class="privacy-note">
+      <small>🔒 Your progress is saved locally. We don't collect personal data.</small>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+<div class="result-container">
+  @if (sessionResult(); as result) {
+    <div class="result-card">
+      <div class="result-header">
+        <div class="celebration">🎉</div>
+        <h1 class="result-title">Verification Complete!</h1>
+        <p class="result-subtitle">Session ID: {{ result.sessionId }}</p>
+      </div>
+
+      <div class="score-section">
+        <div class="score-circle" [class.perfect]="isPerfect()" [class.good]="isGood()">
+          <span class="score-percent">{{ getScorePercent() }}%</span>
+          <span class="score-label">Score</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-value">{{ result.correctAnswers }}</span>
+          <span class="stat-label">✓ Correct</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ result.incorrectAnswers }}</span>
+          <span class="stat-label">✗ Incorrect</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ result.totalChallenges }}</span>
+          <span class="stat-label">📊 Total Challenges</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value">{{ getDuration() }}</span>
+          <span class="stat-label">⏱️ Duration</span>
+        </div>
+      </div>
+
+      <div class="challenges-breakdown">
+        <h3>Challenge Breakdown</h3>
+        <div class="breakdown-list">
+          @for (challengeResult of result.results; track challengeResult.challengeId) {
+            <div
+              class="breakdown-item"
+              [class.correct]="challengeResult.isCorrect"
+              [class.incorrect]="!challengeResult.isCorrect"
+            >
+              <span class="challenge-status">
+                @if (challengeResult.isCorrect) {
+                  ✓
+                } @else {
+                  ✗
+                }
+              </span>
+              <span class="challenge-name">Challenge {{ challengeResult.challengeId + 1 }}</span>
+              <span class="challenge-time">
+                {{ formatTime(challengeResult.completedAt) }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-secondary" (click)="restartChallenge()">🔄 Restart Challenge</button>
+        <button class="btn btn-primary" (click)="goHome()">🏠 Back to Home</button>
+      </div>
+    </div>
+  } @else {
+    <div class="no-results">
+      <div class="error-icon">⚠️</div>
+      <h2>No Results Found</h2>
+      <p>It looks like you haven't completed any challenges yet.</p>
+      <button class="btn btn-primary" (click)="goCaptcha()">Start Verification</button>
+    </div>
+  }
+</div>
