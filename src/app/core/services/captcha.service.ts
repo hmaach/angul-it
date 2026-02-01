@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
-import { CaptchaChallenge, CaptchaType, CaptchaState } from '../models/captcha.model';
+import { CaptchaChallenge, CaptchaType, CaptchaState, CaptchaOption } from '../models/captcha.model';
 import { ChallengeResult, SessionResult } from '../models/result.model';
 
 @Injectable({
@@ -228,37 +228,81 @@ export class CaptchaService {
   }
 
   private generateChallenges(): CaptchaChallenge[] {
+    // Random number of cat images (2-4)
+    const numCats = Math.floor(Math.random() * 3) + 2;
+    // Total images (6)
+    const totalImages = 6;
+    
+    // Generate random cat indices (which positions will have cats)
+    const catPositions = new Set<number>();
+    while (catPositions.size < numCats) {
+      catPositions.add(Math.floor(Math.random() * totalImages));
+    }
+    
+    // Generate random cat numbers (1-10)
+    const catNumbers: number[] = [];
+    for (let i = 0; i < numCats; i++) {
+      catNumbers.push(Math.floor(Math.random() * 10) + 1);
+    }
+    
+    // Generate random non-cat numbers (1-10)
+    const nonCatNumbers: number[] = [];
+    for (let i = 0; i < totalImages - numCats; i++) {
+      let num;
+      do {
+        num = Math.floor(Math.random() * 10) + 1;
+      } while (catNumbers.includes(num));
+      nonCatNumbers.push(num);
+    }
+    
+    // Build options array
+    const options: CaptchaOption[] = [];
+    let catIndex = 0;
+    let nonCatIndex = 0;
+    
+    for (let i = 0; i < totalImages; i++) {
+      const isCat = catPositions.has(i);
+      const imageNum = isCat ? catNumbers[catIndex++] : nonCatNumbers[nonCatIndex++];
+      options.push({
+        id: `img${i + 1}`,
+        imageUrl: isCat ? `/images/cat${imageNum}.png` : `/images/random${imageNum}.png`,
+        label: 'Image',
+        isCorrect: isCat,
+      });
+    }
+    
+    // Generate random math problem (a + b = ? where a, b are 1-9)
+    const num1 = Math.floor(Math.random() * 9) + 1;
+    const num2 = Math.floor(Math.random() * 9) + 1;
+    const mathAnswer = num1 + num2;
+    
+    // Generate random slider position (20-80)
+    const sliderTarget = Math.floor(Math.random() * 61) + 20;
+    
     return [
       {
         id: 0,
         type: CaptchaType.IMAGE_SELECTION,
         question: 'Select all images with CATS',
         description: 'Click on all pictures that contain cats to prove you are human',
-        requiredCorrect: 2,
-        options: [
-          { id: 'img1', imageUrl: '/images/cat1.png', label: 'Image', isCorrect: true },
-          { id: 'img2', imageUrl: '/images/random1.png', label: 'Image', isCorrect: false },
-          { id: 'img3', imageUrl: '/images/cat2.png', label: 'Image', isCorrect: true },
-          { id: 'img4', imageUrl: '/images/random2.png', label: 'Image', isCorrect: false },
-          { id: 'img5', imageUrl: '/images/random3.png', label: 'Image', isCorrect: false },
-          { id: 'img6', imageUrl: '/images/cat3.png', label: 'Image', isCorrect: true },
-        ],
+        requiredCorrect: numCats,
+        options,
       },
       {
         id: 1,
         type: CaptchaType.MATH_QUESTION,
-        question: 'Simple Math Verification',
+        question: `${num1} + ${num2} = ?`,
         description: 'Solve this simple math problem to continue',
         requiredCorrect: 1,
-        options: [{ id: 'math1', label: '7', isCorrect: true }],
+        options: [{ id: 'math1', label: mathAnswer.toString(), isCorrect: true }],
       },
       {
         id: 2,
         type: CaptchaType.SLIDER_PUZZLE,
-        question: 'Slider Verification',
-        description: 'Slide the handle to match the target position (target: 50%)',
+        question: `Slide the handle to match the target position`,
+        description: `Slide to ${sliderTarget}%`,
         requiredCorrect: 1,
-        options: [{ id: 'slider1', label: '50', isCorrect: true }],
+        options: [{ id: 'slider1', label: sliderTarget.toString(), isCorrect: true }],
       },
     ];
   }
