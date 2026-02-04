@@ -1,5 +1,10 @@
 import { Injectable, signal, computed, effect } from '@angular/core';
-import { CaptchaChallenge, CaptchaType, CaptchaState, CaptchaOption } from '../models/captcha.model';
+import {
+  CaptchaChallenge,
+  CaptchaType,
+  CaptchaState,
+  CaptchaOption,
+} from '../models/captcha.model';
 import { ChallengeResult, SessionResult } from '../models/result.model';
 
 @Injectable({
@@ -103,6 +108,9 @@ export class CaptchaService {
   }
 
   private validateAnswer(challenge: CaptchaChallenge, answer: any): boolean {
+    console.log('challenge: ', challenge);
+    console.log('answer: ', answer);
+
     switch (challenge.type) {
       case CaptchaType.IMAGE_SELECTION:
         return this.validateImageSelection(challenge, answer);
@@ -232,19 +240,19 @@ export class CaptchaService {
     const numCats = Math.floor(Math.random() * 3) + 2;
     // Total images (6)
     const totalImages = 6;
-    
+
     // Generate random cat indices (which positions will have cats)
     const catPositions = new Set<number>();
     while (catPositions.size < numCats) {
       catPositions.add(Math.floor(Math.random() * totalImages));
     }
-    
+
     // Generate random cat numbers (1-10)
     const catNumbers: number[] = [];
     for (let i = 0; i < numCats; i++) {
       catNumbers.push(Math.floor(Math.random() * 10) + 1);
     }
-    
+
     // Generate random non-cat numbers (1-10)
     const nonCatNumbers: number[] = [];
     for (let i = 0; i < totalImages - numCats; i++) {
@@ -254,12 +262,12 @@ export class CaptchaService {
       } while (catNumbers.includes(num));
       nonCatNumbers.push(num);
     }
-    
+
     // Build options array
     const options: CaptchaOption[] = [];
     let catIndex = 0;
     let nonCatIndex = 0;
-    
+
     for (let i = 0; i < totalImages; i++) {
       const isCat = catPositions.has(i);
       const imageNum = isCat ? catNumbers[catIndex++] : nonCatNumbers[nonCatIndex++];
@@ -270,15 +278,15 @@ export class CaptchaService {
         isCorrect: isCat,
       });
     }
-    
+
     // Generate random math problem (a + b = ? where a, b are 1-9)
     const num1 = Math.floor(Math.random() * 9) + 1;
     const num2 = Math.floor(Math.random() * 9) + 1;
     const mathAnswer = num1 + num2;
-    
+
     // Generate random slider position (20-80)
     const sliderTarget = Math.floor(Math.random() * 61) + 20;
-    
+
     return [
       {
         id: 0,

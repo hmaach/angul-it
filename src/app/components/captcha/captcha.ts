@@ -71,7 +71,7 @@ export class CaptchaComponent {
       case CaptchaType.IMAGE_SELECTION:
         return this.selectedImages().length > 0;
       case CaptchaType.MATH_QUESTION:
-        return this.textAnswer().toString().trim().length > 0;
+        return this.textAnswer()?.toString()?.trim()?.length > 0;
       case CaptchaType.SLIDER_PUZZLE:
         return this.sliderValue() > 0;
       default:
