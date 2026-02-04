@@ -44,9 +44,6 @@
       <!-- Image Selection Challenge -->
       <ng-container *ngIf="challenge.type === CaptchaType.IMAGE_SELECTION">
         <div class="image-selection-challenge">
-          <p class="instruction">
-            <small>Select all images that match the criteria</small>
-          </p>
           <div class="image-grid">
             <ng-container *ngFor="let option of challenge.options; trackBy: trackById">
               <div
@@ -101,7 +98,7 @@
             </div>
             <div class="slider-labels">
               <span>0%</span>
-              <span class="target-label">Target: 50%</span>
+              <span class="target-label"></span>
               <span>100%</span>
             </div>
           </div>
